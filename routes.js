@@ -46,6 +46,28 @@ router.post("/add/", async function(req, res, next) {
   }
 });
 
+/** Searches customers by name in db and renders list */
+router.get('/search', async function(req, res, next){
+  try{
+    console.log('route hit')
+    const searchStr = req.query.search
+    const customers = await Customer.searchCustomers(searchStr)
+    console.log(customers)
+    return res.render('customer_search.html', { customers, searchStr})
+  }catch(e){
+    next(e)
+  }
+})
+
+router.get('/top-ten', async function(req,res,next){
+  try{
+    const rows = await Customer.getTopTen()
+    return res.render('customer_top_ten.html',{rows})
+  }catch(e){
+    next(e)
+  }
+})
+
 /** Show a customer, given their ID. */
 
 router.get("/:id/", async function(req, res, next) {
